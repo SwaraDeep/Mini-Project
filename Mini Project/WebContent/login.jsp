@@ -77,15 +77,16 @@
 
 	<%
 	Cookie[] cookies = request.getCookies();
+	if (cookies != null) {
+		System.out.println("\nlogin.jsp - Cookies :(" + cookies.length + "): ");
 
-	System.out.println("\nlogin.jsp - Cookies :(" + cookies.length + "): ");
+		for (int i = 0; i < cookies.length; i++) {
+			System.out.println("\t" + cookies[i].getName() + " : " + cookies[i].getValue());
+		}
 
-	for (int i = 0; i < cookies.length; i++) {
-		System.out.println("\t" + cookies[i].getName() + " : " + cookies[i].getValue());
-	}
-
-	if (cookies.length == 2 && cookies[1].getName().equals("doctor")) {
-		response.sendRedirect("Dashboard.jsp");
+		if (cookies.length == 2 && cookies[1].getName().equals("doctor")) {
+			response.sendRedirect("Dashboard.jsp");
+		}
 	}
 	%>
 
@@ -103,8 +104,7 @@
 		<input type=password name=dpass id=dpass>
 		<div id=dpass_req style="color: red; display: none;">*Password
 			is required</div>
-		<br>
-		<input type=submit value=Login> <a href=signup.jsp>Register
+		<br> <input type=submit value=Login> <a href=signup.jsp>Register
 			Here</a>
 	</form>
 
@@ -120,8 +120,7 @@
 		<input type=number name=pmobile id=pmobile>
 		<div id=pmobile_req style="color: red; display: none;">*Mobile
 			number is required</div>
-		<br>
-		<input type=submit value=Proceed>
+		<br> <input type=submit value=Proceed>
 	</form>
 </body>
 </html>
