@@ -15,14 +15,21 @@
 	String dpass = request.getParameter("dpassword");
 	String name = request.getParameter("name");
 
-	Doctor doctor = new Doctor(dname, dpass, name);
+	if(dname == null || dname.isEmpty() || dpass == null || dpass.isEmpty() || name == null || name.isEmpty()){
+		System.out.println("\nInvalid attempt to access createDoctor.jsp -- Redirecting to login.jsp");
+		response.sendRedirect("login.jsp");
+	}else{
+		
+		Doctor doctor = new Doctor(dname, dpass, name);
 
-	if (JDBCHelper.insertDoctor(doctor)) {
-		out.write("Inserted Successfully!");
-		out.write("<br><a href=login.jsp >Login...</a>");
-	} else {
-		out.write("Failed to signup! Please try again!");
-		out.write("<br><a href=signup.jsp >Signup...</a>");
+		if (JDBCHelper.insertDoctor(doctor)) {
+			out.write("Account created Successfully!");
+			out.write("<br><a href=login.jsp >Login...</a>");
+		} else {
+			out.write("Failed to signup! Please try again!");
+			out.write("<br><a href=signup.jsp >Signup...</a>");
+		}
+		
 	}
 	%>
 

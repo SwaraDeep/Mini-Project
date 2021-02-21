@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+<%@ page import="com.doc.Cookie" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -76,17 +77,8 @@
         </script>
 
 	<%
-	Cookie[] cookies = request.getCookies();
-	if (cookies != null) {
-		System.out.println("\nlogin.jsp - Cookies :(" + cookies.length + "): ");
-
-		for (int i = 0; i < cookies.length; i++) {
-			System.out.println("\t" + cookies[i].getName() + " : " + cookies[i].getValue());
-		}
-
-		if (cookies.length == 2 && cookies[1].getName().equals("doctor")) {
+	if (Cookie.get(request, "doctor") != null) {
 			response.sendRedirect("Dashboard.jsp");
-		}
 	}
 	%>
 

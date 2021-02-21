@@ -20,10 +20,31 @@ public class JDBCHelper {
 	private static Connection con = null;
 
 	// Get a connection to the database
-	private static Connection getConnection() {
+	private static Connection getConnection() throws SQLException {
 		try {
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
+
+			System.out.println("\nTrying to create database and table:");
+			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/", username, password);
+			Statement st = con.createStatement();
+
+			String query = "CREATE DATABASE IF NOT EXISTS mydb;";
+			if (st.executeUpdate(query) >= 1) {
+				System.out.println("\tDatabase 'mydb' created successfully!");
+			}
+
+			query = "\tCREATE TABLE IF NOT EXISTS mydb.doctors(dname VARCHAR(20), dpassword VARCHAR(30) NOT NULL, name VARCHAR(30) NOT NULL, PRIMARY KEY (dname));";
+			System.out.println(query);
+			if (st.executeUpdate(query) < 0) {
+				System.out.println("\tFailed to create 'doctors' table!");
+			}
+
+			query = "\tCREATE TABLE IF NOT EXISTS mydb.appointments(dname VARCHAR(20) NOT NULL, date DATE, pname VARCHAR(20) NOT NULL, pmobile VARCHAR(13) NOT NULL);";
+			System.out.println(query);
+			if (st.executeUpdate(query) < 0) {
+				System.out.println("\tFailed to create 'appointments' table!");
+			}
 
 			con = DriverManager.getConnection(url, username, password);
 
@@ -37,7 +58,6 @@ public class JDBCHelper {
 	public static Boolean getDoctor(String dname, String dpass) {
 
 		String query = "SELECT dname FROM doctors WHERE dname=\"" + dname + "\" AND dpassword=\"" + dpass + "\";";
-
 		System.out.println("Querying data: " + query);
 
 		try {
@@ -58,8 +78,7 @@ public class JDBCHelper {
 
 	public static Boolean insertDoctor(Doctor doctor) {
 
-		String query = "INSERT INTO doctors(dname, dpassword, name) " + "VALUES(\"" + doctor.getDname() + "\", \""
-				+ doctor.getPassword() + "\", \"" + doctor.getName() + "\");";
+		String query = "INSERT INTO doctors(dname, dpassword, name) " + "VALUES(\"" + doctor.getDname() + "\", \"" + doctor.getPassword() + "\", \"" + doctor.getName() + "\");";
 		System.out.println("Inserting data: " + query);
 
 		try {
@@ -103,8 +122,7 @@ public class JDBCHelper {
 			ResultSet result = st.executeQuery(query);
 
 			while (result.next()) {
-				appointments.add(new Appointment(result.getString("dname"), result.getString("pname"),
-						result.getDate("date"), result.getString("pmobile")));
+				appointments.add(new Appointment(result.getString("dname"), result.getString("pname"), result.getDate("date"), result.getString("pmobile")));
 			}
 
 			appointments.forEach(app -> {
@@ -147,8 +165,7 @@ public class JDBCHelper {
 	}
 
 	public static boolean bookAppointment(String dname, Date date, String pname, String pmobile) {
-		String query = "INSERT INTO appointments(dname, date, pname, pmobile) VALUES('" + dname + "', '" + date + "', '"
-				+ pname + "', '" + pmobile + "');";
+		String query = "INSERT INTO appointments(dname, date, pname, pmobile) VALUES('" + dname + "', '" + date + "', '" + pname + "', '" + pmobile + "');";
 		System.out.println("\nCreating Appointment: " + query);
 
 		try {

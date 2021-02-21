@@ -2,6 +2,7 @@
 	pageEncoding="ISO-8859-1"%>
 <%@ page import="com.doc.JDBCHelper"%>
 <%@ page import="com.doc.Appointment"%>
+<%@ page import="com.doc.Cookie"%>
 <%@ page import="java.util.*"%>
 <!DOCTYPE html>
 <html>
@@ -33,14 +34,14 @@ function search(){
 
 </script>
 
-	<%
-	Cookie cookies[] = request.getCookies();
-	if (cookies == null || cookies.length <= 1 || cookies[1].getName() == null || cookies[1].getName() == "") {
-		out.print("Please login!<br>Click <a href=login.jsp >here</a> to login");
+<%
+	if (Cookie.list(request, "Dashboard.jsp") <= 1) {
+		System.out.println("\nInvalid attempt to access Dashboard.jsp -- Redirecting to login.jsp");
+		response.sendRedirect("login.jsp");
 	} else {
-		if (cookies[1].getName().equals("doctor")) {
 
-			String dname = cookies[1].getValue();
+		String dname = Cookie.get(request, "doctor");
+		if (dname != null) {
 
 			//welcome text
 			out.print("<h2>Welcome " + dname + "!</h2>");
@@ -52,17 +53,13 @@ function search(){
 
 			out.println("<div id=list >Please wait....</div>");
 
-		} else if (cookies[1].getName().equals("patient")) {
+		} else if (Cookie.get(request, "patient") != null) {
 			response.sendRedirect("appointment.jsp");
 		} else {
-			System.out.println("\nDashboard.jsp - Cookies(" + cookies.length + "): ");
-
-			for (int i = 0; i < cookies.length; i++) {
-		System.out.println("\t" + cookies[i].getName() + " : " + cookies[i].getValue());
-			}
-			out.println("Something went wrong. Please try again!");
+			System.out.println("\nInvalid attempt to access Dashboard.jsp -- Redirecting to login.jsp");
+			response.sendRedirect("login.jsp");
 		}
 	}
-	%>
+%>
 </body>
 </html>

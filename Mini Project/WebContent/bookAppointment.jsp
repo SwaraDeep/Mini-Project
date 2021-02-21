@@ -1,4 +1,4 @@
-
+<%@page import="com.doc.Cookie"%>
 <%@page import="com.doc.JDBCHelper"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -12,42 +12,42 @@
 </head>
 <body>
 
-	<%
+<%
 	String dname = request.getParameter("doc");
-	System.out.print("Doc: " + dname + " Date: " + request.getParameter("date"));
-	Date date = new SimpleDateFormat("yyyy-MM-dd").parse(request.getParameter("date"));
-	java.sql.Date sqldate = new java.sql.Date(date.getTime());
-	String pname = null;
-	String pmobile = null;
+	String sdate = request.getParameter("date");
+	
+	if(dname == null || dname.isEmpty() || sdate == null || sdate.isEmpty()){
+		System.out.println("\nInvalid attempt to access bookAppointment.jsp -- Redirecting to login.jsp");
+		response.sendRedirect("login.jsp");
+	}else{
+		System.out.print("Doc: " + dname + " Date: " + sdate);
+		
+		Date date = new SimpleDateFormat("yyyy-MM-dd").parse(sdate);
+		java.sql.Date sqldate = new java.sql.Date(date.getTime());
+		String pname = null;
+		String pmobile = null;
 
-	Cookie cookies[] = request.getCookies();
-	if (cookies == null || cookies.length <= 2 || cookies[1].getName() == null || cookies[1].getName() == ""
-			|| cookies[2].getName() == null || cookies[2].getName() == "") {
-		out.print("Please login!<br>Click <a href=login.jsp >here</a> to login");
-	} else {
-		if (cookies[1].getName().equals("pname") && cookies[2].getName().equals("pmobile")) {
-
-			pname = cookies[1].getValue();
-			pmobile = cookies[2].getValue();
-
-			if (JDBCHelper.bookAppointment(dname, sqldate, pname, pmobile)) {
-		out.println("Appointment booked on " + +date.getDate() + "-" + (date.getMonth() + 1) + "-"
-				+ (date.getYear() + 1900));
-		Cookie[] c = request.getCookies();
-		for (int i = 1; i < c.length; i++) {
-			System.out.println("bookAppointment.jsp - Cookie Invalidated: " + c[i].getName());
-			c[i].setMaxAge(0);
-			response.addCookie(c[i]);
-		}
-			} else {
-		out.print("Failed to book appointment! Please <a href=login.jsp >try again!</a>");
-			}
-		} else {
+		if (Cookie.list(request, "bookAppointment.jsp") <= 2) {
 			out.print("Please login!<br>Click <a href=login.jsp >here</a> to login");
+		} else {
+			pname = Cookie.get(request, "pname");
+			pmobile = Cookie.get(request, "pmobile");
+			
+			if (pname != null && pmobile != null) {
+
+				if (JDBCHelper.bookAppointment(dname, sqldate, pname, pmobile)) {
+					out.println("Appointment booked on " + date.getDate() + "-" + (date.getMonth() + 1) + "-" + (date.getYear() + 1900));
+					Cookie.delete(response, request, "bookAppointment.jsp");
+				} else {
+					out.print("Failed to book appointment! Please <a href=login.jsp >try again!</a>");
+				}
+				
+			} else {
+				out.print("Please login!<br>Click <a href=login.jsp >here</a> to login");
+			}
 		}
 	}
-	%>
-
+%>
 
 </body>
 </html>

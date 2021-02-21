@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
+	<%@ page import="com.doc.Cookie" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,15 +10,9 @@
 <body>
 
 	<%
-	Cookie[] c = request.getCookies();
-	for (int i = 1; i < c.length; i++) {
-		System.out.println("logout.jsp - Cookie Invalidated: " + c[i].getName() + " : " + c[i].getValue());
-		c[i].setMaxAge(0);
-		response.addCookie(c[i]);
-	}
+	Cookie.delete(response, request, "logout.jsp");
 	out.print("Successfully logged out! <br>Return to <a href=login.jsp >login</a> page!");
 	%>
-
 
 </body>
 </html>
