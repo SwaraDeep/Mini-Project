@@ -13,7 +13,7 @@ public class Cookie {
 		javax.servlet.http.Cookie c = new javax.servlet.http.Cookie(name, value);
 		c.setMaxAge(60 * 60);
 		response.addCookie(c);
-		System.out.println("Cookie created (" + classname + ") - " + name);
+		System.out.println("Cookie created (" + classname + ") - " + name + " : " + value);
 	}
 	
 	/*
@@ -48,6 +48,7 @@ public class Cookie {
 				}
 			}
 		}
+		System.out.println("No cookie found with name: " + name);
 		return null;
 	}
 	
@@ -62,7 +63,7 @@ public class Cookie {
 		if(c != null){
 			System.out.println("Cookies (" + classname + "):");
 			for(int i = 0; i < c.length; i++) {
-					System.out.println("\t" + c[i]);
+					System.out.println("\t" + c[i].getName());
 			}
 		}else {
 			return 0;

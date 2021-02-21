@@ -9,38 +9,19 @@
 <head>
 <meta charset="ISO-8859-1">
 <title>Dashboard</title>
+
+	<script type="text/javascript" src="js/Dashboard.js"></script>
 </head>
-<body onload=search()>
+<body onload=search() >
 
-	<script>
 
-function search(){
-	var container = document.getElementById("list");
-	var date = document.getElementById("search_date").value;
-	
-	if(date == null || date == ""){
-		date = "all";
-	}
-	
-	 var xhttp = new XMLHttpRequest();
-	    xhttp.onreadystatechange = function(){
-	        if(this.readyState == 4 && this.status == 200){
-	            container.innerHTML = this.responseText;
-	        }
-	    };
-	    xhttp.open('POST', "getAppointments.jsp?date=" + date, true);
-	    xhttp.send();
-}
-
-</script>
-
-<%
+	<%
 	if (Cookie.list(request, "Dashboard.jsp") <= 1) {
 		System.out.println("\nInvalid attempt to access Dashboard.jsp -- Redirecting to login.jsp");
 		response.sendRedirect("login.jsp");
 	} else {
 
-		String dname = Cookie.get(request, "doctor");
+		String dname = Cookie.get(request, "dname");
 		if (dname != null) {
 
 			//welcome text
@@ -53,13 +34,13 @@ function search(){
 
 			out.println("<div id=list >Please wait....</div>");
 
-		} else if (Cookie.get(request, "patient") != null) {
+		} else if (Cookie.get(request, "pname") != null) {
 			response.sendRedirect("appointment.jsp");
 		} else {
 			System.out.println("\nInvalid attempt to access Dashboard.jsp -- Redirecting to login.jsp");
 			response.sendRedirect("login.jsp");
 		}
 	}
-%>
+	%>
 </body>
 </html>

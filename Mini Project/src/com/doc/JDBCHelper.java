@@ -25,24 +25,23 @@ public class JDBCHelper {
 
 			Class.forName("com.mysql.cj.jdbc.Driver");
 
-			System.out.println("\nTrying to create database and table:");
+			System.out.println("\nCreating database and tables if not exist!");
 			con = DriverManager.getConnection("jdbc:mysql://localhost:3306/", username, password);
 			Statement st = con.createStatement();
 
 			String query = "CREATE DATABASE IF NOT EXISTS mydb;";
-			if (st.executeUpdate(query) >= 1) {
-				System.out.println("\tDatabase 'mydb' created successfully!");
-			}
-
+			st.executeUpdate(query);
+			
 			query = "\tCREATE TABLE IF NOT EXISTS mydb.doctors(dname VARCHAR(20), dpassword VARCHAR(30) NOT NULL, name VARCHAR(30) NOT NULL, PRIMARY KEY (dname));";
-			System.out.println(query);
 			if (st.executeUpdate(query) < 0) {
+				System.out.println(query);
 				System.out.println("\tFailed to create 'doctors' table!");
 			}
 
 			query = "\tCREATE TABLE IF NOT EXISTS mydb.appointments(dname VARCHAR(20) NOT NULL, date DATE, pname VARCHAR(20) NOT NULL, pmobile VARCHAR(13) NOT NULL);";
-			System.out.println(query);
+			
 			if (st.executeUpdate(query) < 0) {
+				System.out.println(query);
 				System.out.println("\tFailed to create 'appointments' table!");
 			}
 

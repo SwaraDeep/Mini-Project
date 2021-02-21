@@ -16,48 +16,19 @@
 <title>New Appointment</title>
 </head>
 <body>
-	<script>
-		//to validate the Doctor Name and Date fields 
-		function validatePatientForm() {
-			var doc = document.getElementById("doc").value;
-			var date = document.getElementById("date").value;
-			var flag = 0;
-
-			if (doc == null || doc == "" || doc == "---Select---") {
-				document.getElementById("doc_req").style.display = "inline-block";
-				flag = 1;
-			} else {
-				document.getElementById("doc_req").style.display = "none";
-			}
-
-			if (date == null || date == "") {
-				document.getElementById("date_req").style.display = "inline-block";
-				flag = 1;
-			} else {
-				document.getElementById("date_req").style.display = "none";
-			}
-
-			if (flag == 0) {
-				return true;
-			} else {
-				return false;
-			}
-
-		}
-	</script>
+	<script src="js/appointment.js" type="text/javascript"></script>
 
 	<%
-	
 	/*
 	 *To validate the patient name and mobile number cookies
 	 */
 	String pname = Cookie.get(request, "pname");
 	String pmobile = Cookie.get(request, "pmobile");
-	if(pname == null || pname.isEmpty() || pmobile == null || pmobile.isEmpty()){
+	if (pname == null || pname.isEmpty() || pmobile == null || pmobile.isEmpty()) {
 		System.out.println("\nInvalid attempt to access appointment.jsp -- Redirecting to login.jsp");
 		response.sendRedirect("login.jsp");
-	}else{
-		
+	} else {
+
 		//To display the form that contains Doctor name and Date fields
 		out.print("<h2>Get Appointment:</h2>");
 		out.print("<form action=bookAppointment.jsp onsubmit='return validatePatientForm()' method=POST >");
@@ -74,19 +45,18 @@
 			Iterator<String> i = list.iterator();
 
 			while (i.hasNext()) {
-				String name = i.next();
+		String name = i.next();
 
-				//To add options to the <select> tag
-				out.print("<option value=\"" + name + "\">" + name + "</option>");
+		//To add options to the <select> tag
+		out.print("<option value=\"" + name + "\">" + name + "</option>");
 			}
 			out.print("</select><span id=doc_req style='color: red; display: none;'>&nbsp;*required</span>");
 		}
 
 		//Date input field
 		out.print("<br><br><span>Select Date:</span>&emsp;");
-		out.print(
-				"&emsp;<input type=date id=date name=date ><div id=date_req style='color: red; display: none;'>&nbsp;*required</div>");
-		out.print("<br><input type=submit value='Book Appointment'>");	
+		out.print("&emsp;<input type=date id=date name=date ><div id=date_req style='color: red; display: none;'>&nbsp;*required</div>");
+		out.print("<br><input type=submit value='Book Appointment'>");
 	}
 	%>
 </body>
