@@ -127,7 +127,6 @@ public class JDBCHelper {
 			appointments.forEach(app -> {
 				System.out.println(app.getPname() + "\t" + app.getMobile() + "\t" + app.getDate());
 			});
-			System.out.println(appointments.size());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
